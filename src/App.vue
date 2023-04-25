@@ -7,25 +7,38 @@ export default {
             input2: null,
             input3: null,
             inputDate: null,
-            exerciseList: []
+            exerciseList: [
+                { type: 'Running', stats: [{ label: 'time (min)', value: 60 }, { label: 'distance (mi)', value: 5 }], date: '2023-04-23' },
+                { type: 'Squats', stats: [{label: 'quantity', value: 15}], date: '2023-02-01' },
+                { type: 'Deadlift', stats: [{label: 'sets', value: 3}, {label: 'reps', value: 5}, {label: 'weight (lbs)', value: 200}], date: '2022-12-13' }
+            ],
+            sort: 'all'
         }
-
+    },
+    computed: {
+        filteredExercises() {
+            if (this.sort === 'all') {
+                return this.exerciseList
+            } else {
+                return this.exerciseList.filter(exercise => exercise.type === this.sort)
+            }
+            
+        }
     },
     methods: {
         addExercise() {
             if (this.chosenExercise === 'Running' || this.chosenExercise === 'Cycling') {
-                this.exerciseList = [...this.exerciseList, { type: this.chosenExercise, stats: [{ label: 'time', value: this.input1 }, { label: 'distance', value: this.input2 }], date: this.inputDate }]
+                this.exerciseList = [...this.exerciseList, { type: this.chosenExercise, stats: [{ label: 'time (min)', value: this.input1 }, { label: 'distance (mi)', value: this.input2 }], date: this.inputDate }]
             } else if (this.chosenExercise === 'Squats' || this.chosenExercise === 'Push-ups') {
                 this.exerciseList = [...this.exerciseList, { type: this.chosenExercise, stats: [{label: 'quantity', value: this.input1}], date: this.inputDate }]
             } else if (this.chosenExercise === 'Bench Press' || this.chosenExercise === 'Deadlift') {
-                this.exerciseList = [...this.exerciseList, { type: this.chosenExercise, stats: [{label: 'sets', value: this.input1}, {label: 'reps', value: this.input2}, {label: 'weight', value: this.input3}], date: this.inputDate }]
+                this.exerciseList = [...this.exerciseList, { type: this.chosenExercise, stats: [{label: 'sets', value: this.input1}, {label: 'reps', value: this.input2}, {label: 'weight (lbs)', value: this.input3}], date: this.inputDate }]
             }
             this.chosenExercise = null
             this.input1 = null
             this.input2 = null
             this.input3 = null
             this.inputDate = null
-            console.log(this.exerciseList)
         }
     }
 }
@@ -51,19 +64,19 @@ export default {
             </div>
 
             <div class="input-group" v-if="chosenExercise">
-                <label>{{ chosenExercise === 'Running' || chosenExercise === 'Cycling' ? 'Time' : chosenExercise ===
+                <label>{{ chosenExercise === 'Running' || chosenExercise === 'Cycling' ? 'Time (min)' : chosenExercise ===
                     'Squats' || chosenExercise === 'Push-ups' ? 'Quantity' : 'Sets' }}</label>
-                <input type="text" v-model="input1" required>
+                <input type="number" v-model="input1" required>
             </div>
 
             <div class="input-group" v-if="chosenExercise && chosenExercise !== 'Squats' && chosenExercise !== 'Push-ups'">
-                <label>{{ chosenExercise === 'Running' || chosenExercise === 'Cycling' ? 'Distance' : 'Reps' }}</label>
-                <input type="text" v-model="input2" required>
+                <label>{{ chosenExercise === 'Running' || chosenExercise === 'Cycling' ? 'Distance (mi)' : 'Reps' }}</label>
+                <input type="number" v-model="input2" required>
             </div>
 
             <div class="input-group" v-if="chosenExercise === 'Bench Press' || chosenExercise === 'Deadlift'">
-                <label>Weight</label>
-                <input type="text" v-model="input3" required>
+                <label>Weight (lbs)</label>
+                <input type="number" v-model="input3" required>
             </div>
 
             <div class="input-group" v-if="chosenExercise">
@@ -75,9 +88,19 @@ export default {
             <button type="submit">ADD EXERCISE</button>
         </form>
 
-        <div>
+        <div class="your-exercises">
             <h2>Your Exercises</h2>
-            <div v-for="exercise in exerciseList" class="exercise">
+            
+            <label><input type="radio" name="sort" value="all" v-model="sort">All</label>
+            <label><input type="radio" name="sort" value="Running" v-model="sort">Running</label>
+            <label><input type="radio" name="sort" value="Cycling" v-model="sort">Cycling</label>
+            <label><input type="radio" name="sort" value="Squats" v-model="sort">Squats</label>
+            <label><input type="radio" name="sort" value="Push-ups" v-model="sort">Push-ups</label>
+            <label><input type="radio" name="sort" value="Bench Press" v-model="sort">Bench Press</label>
+            <label><input type="radio" name="sort" value="Deadlift" v-model="sort">Deadlift</label>
+
+
+            <div v-for="exercise in filteredExercises" class="exercise">
                 <div>
                     <p class="smLabel">type</p>
                     <p>{{ exercise.type }}</p>
@@ -121,8 +144,8 @@ form {
     margin: 20px 0;
 }
 
-select,
-input {
+form select,
+form input {
     display: block;
     border: 1px solid rgb(197, 197, 197);
     padding: 10px;
@@ -130,7 +153,7 @@ input {
     width: 100%;
 }
 
-label {
+form label {
     display: block;
     margin-bottom: 5px;
 }
@@ -143,6 +166,14 @@ button {
     background-color: #474d32;
     color: #fff;
     cursor: pointer;
+}
+
+.your-exercises {
+    margin-bottom: 80px;
+}
+
+.your-exercises label {
+    margin: 5px;
 }
 
 .exercise {
