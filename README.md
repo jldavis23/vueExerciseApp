@@ -1,29 +1,8 @@
-# vueExerciseApp
+# Vue Exercise Tracking App
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+App Requirements
+* Add Exercises to Track
+* Track a user-entered exercise by time and distance or sets, reps, and weight amount
+* See a history of past exercises and workouts with tracked stats
+* Be able to set a date when the exercise was performed
+* Must be hosted at a live URL
